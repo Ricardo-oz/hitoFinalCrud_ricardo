@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block titulo %}Editar mis datos{% endblock %}
+{% block contenido %}
+<div class="card mx-auto shadow-sm" style="max-width: 560px;">
+    <div class="card-body">
+        <h2 class="h4 mb-3">Editar mis datos</h2>
+        <!-- Un solo <form> con los dos formularios: se envían juntos con un botón -->
+        <form method="post">
+            {% csrf_token %}
+            <h3 class="h6 text-success">Datos de la cuenta</h3>
+            {{ usuario_form.as_p }}
+
+            {% if perfil_form %}
+                <h3 class="h6 text-success mt-3">Datos personales</h3>
+                <p class="small text-muted mb-2">
+                    RUT: {{ perfil.rut }} · Tipo: {{ perfil.tipo_usuario }} (no se pueden modificar)
+                </p>
+                {{ perfil_form.as_p }}
+            {% endif %}
+
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+            <a href="{% url 'perfil' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

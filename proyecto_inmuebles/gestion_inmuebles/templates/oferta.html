@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block titulo %}Oferta disponible{% endblock %}
+{% block contenido %}
+<h1 class="h3">Inmuebles disponibles</h1>
+<form method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-sm-5 col-md-4">
+        <label for="region" class="form-label">Región</label>
+        <select name="region" id="region" class="form-select">
+            <option value="">Todas las regiones</option>
+            {% for region in regiones %}
+                <option value="{{ region.pk }}" {% if region_seleccionada == region.pk|stringformat:'s' %}selected{% endif %}>{{ region.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-5 col-md-4">
+        <label for="tipo" class="form-label">Tipo de inmueble</label>
+        <select name="tipo" id="tipo" class="form-select">
+            <option value="">Todos los tipos</option>
+            {% for tipo in tipos %}
+                <option value="{{ tipo.pk }}" {% if tipo_seleccionado == tipo.pk|stringformat:'s' %}selected{% endif %}>{{ tipo.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-2">
+        <button type="submit" class="btn btn-success">Filtrar</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped bg-white">
+        <thead>
+            <tr><th>Nombre</th><th>Tipo</th><th>Comuna</th><th>Región</th><th>Precio mensual</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+            {% for inmueble in inmuebles %}
+                <tr>
+                    <td>{{ inmueble.nombre }}</td>
+                    <td>{{ inmueble.tipo_inmueble.nombre }}</td>
+                    <td>{{ inmueble.comuna.nombre }}</td>
+                    <td>{{ inmueble.comuna.region.nombre }}</td>
+                    <td>${{ inmueble.precio_mensual }}</td>
+                    <td>{{ inmueble.descripcion|truncatewords:20 }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6">No hay inmuebles disponibles con esos filtros.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

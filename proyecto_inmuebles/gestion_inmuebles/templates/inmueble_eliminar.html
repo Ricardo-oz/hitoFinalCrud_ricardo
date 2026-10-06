@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block titulo %}Eliminar inmueble{% endblock %}
+{% block contenido %}
+<h1 class="h3">Eliminar inmueble</h1>
+<p>¿Confirmas que deseas eliminar <strong>{{ inmueble.nombre }}</strong>?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{% url 'mis_inmuebles' %}" class="btn btn-outline-secondary">Cancelar</a>
+</form>
+{% endblock %}

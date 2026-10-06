@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block titulo %}Mi perfil{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h3 mb-0">{{ user.get_full_name|default:user.username }}</h1>
+        {% if perfil %}
+            <span class="badge bg-success">{{ perfil.tipo_usuario }}</span>
+        {% endif %}
+    </div>
+    <a href="{% url 'editar_perfil' %}" class="btn btn-outline-success">Editar mis datos</a>
+</div>
+
+<div class="row g-3">
+    <!-- Datos que vienen del modelo User de Django -->
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white fw-semibold">Datos de la cuenta</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Usuario:</strong> {{ user.username }}</li>
+                <li class="list-group-item"><strong>Nombres:</strong> {{ user.first_name }}</li>
+                <li class="list-group-item"><strong>Apellidos:</strong> {{ user.last_name }}</li>
+                <li class="list-group-item"><strong>Correo:</strong> {{ user.email }}</li>
+                <li class="list-group-item"><strong>Miembro desde:</strong> {{ user.date_joined|date:"d/m/Y" }}</li>
+            </ul>
+        </div>
+    </div>
+ 
+    <!-- Datos que vienen de nuestro modelo Perfil (Hito 1) -->
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white fw-semibold">Datos personales</div>
+            {% if perfil %}
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Tipo de usuario:</strong> {{ perfil.tipo_usuario }}</li>
+                    <li class="list-group-item"><strong>RUT:</strong> {{ perfil.rut }}</li>
+                    <li class="list-group-item"><strong>Dirección:</strong> {{ perfil.direccion }}</li>
+                    <li class="list-group-item"><strong>Teléfono:</strong> {{ perfil.telefono }}</li>
+                </ul>
+            {% else %}
+                <div class="card-body text-muted">
+                    Esta cuenta no tiene datos de arrendatario ni de arrendador
+                    (por ejemplo, el superusuario creado con <code>createsuperuser</code>).
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+ 
+<!-- Sección distinta según el tipo de usuario -->
+<div class="card shadow-sm mt-3">
+    <div class="card-body">
+        {% if perms.gestion_inmuebles.add_inmueble %}
+            <h2 class="h5">Mis publicaciones</h2>
+            <p class="mb-2">Tienes <strong>{{ total_inmuebles }}</strong> inmueble{{ total_inmuebles|pluralize }} publicado{{ total_inmuebles|pluralize }},
+               <strong>{{ disponibles }}</strong> disponible{{ disponibles|pluralize }} para arriendo.</p>
+            <a href="{% url 'mis_inmuebles' %}" class="btn btn-success btn-sm">Ver mis inmuebles</a>
+        {% else %}
+            <h2 class="h5">¿Buscas dónde vivir?</h2>
+            <p class="mb-2">Revisa los inmuebles que están disponibles para arriendo.</p>
+            <a href="{% url 'oferta' %}" class="btn btn-success btn-sm">Ver inmuebles disponibles</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

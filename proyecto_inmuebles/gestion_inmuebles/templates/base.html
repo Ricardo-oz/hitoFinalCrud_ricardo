@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}Arriendos{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Da estilo Bootstrap a los campos que genera {{ form.as_p }} */
+        form input:not([type=radio]):not([type=checkbox]):not([type=hidden]) {
+            display: block; width: 100%; padding: .375rem .75rem;
+            border: 1px solid #ced4da; border-radius: .375rem;
+        }
+        .helptext, form ul:not(.errorlist) { font-size: .8rem; color: #6c757d; }
+        .errorlist { color: #dc3545; font-size: .9rem; padding-left: 1rem; }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand navbar-dark bg-success mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Arriendos</a>
+            <ul class="navbar-nav ms-auto align-items-center">
+                {% if user.is_authenticated %}
+                    {% if perms.gestion_inmuebles.view_inmueble %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'oferta' %}">Oferta</a></li>
+                    {% endif %}
+                    {% if perms.gestion_inmuebles.add_inmueble %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'mis_inmuebles' %}">Mis inmuebles</a></li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link me-2" href="{% url 'perfil' %}">Mi perfil ({{ user.username }})</a></li>
+                    <li class="nav-item">
+                        <!-- Desde Django 5 el logout solo acepta POST: por eso es un formulario -->
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-light btn-sm">Cerrar sesión</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Registrarse</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% block contenido %}{% endblock %}
+    </main>
+</body>
+</html>

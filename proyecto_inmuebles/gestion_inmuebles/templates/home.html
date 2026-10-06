@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block titulo %}Inicio{% endblock %}
+{% block contenido %}
+<h1 class="h3">Bienvenido/a, {{ user.first_name|default:user.username }}</h1>
+<p class="text-muted">Estos son los inmuebles disponibles para arriendo:</p>
+
+<table class="table table-striped bg-white">
+    <thead>
+        <tr><th>Nombre</th><th>Tipo</th><th>Comuna</th><th>Precio mensual</th></tr>
+    </thead>
+    <tbody>
+        {% for inmueble in inmuebles %}
+            <tr>
+                <td>{{ inmueble.nombre }}</td>
+                <td>{{ inmueble.tipo_inmueble }}</td>
+                <td>{{ inmueble.comuna.nombre }}</td>
+                <td>${{ inmueble.precio_mensual }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4">No hay inmuebles disponibles.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

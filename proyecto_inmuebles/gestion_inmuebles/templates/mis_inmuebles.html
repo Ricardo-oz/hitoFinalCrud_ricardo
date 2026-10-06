@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block titulo %}Mis inmuebles{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Mis inmuebles</h1>
+    <a href="{% url 'crear_inmueble' %}" class="btn btn-success">Publicar inmueble</a>
+</div>
+<p class="text-muted">Inmuebles publicados por {{ user.get_full_name|default:user.username }}:</p>
+
+<table class="table table-striped bg-white">
+    <thead>
+        <tr><th>Nombre</th><th>Comuna</th><th>Precio mensual</th><th>Estado</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+        {% for inmueble in inmuebles %}
+            <tr>
+                <td>{{ inmueble.nombre }}</td>
+                <td>{{ inmueble.comuna.nombre }}</td>
+                <td>${{ inmueble.precio_mensual }}</td>
+                <td>{{ inmueble.get_estado_display }}</td>
+                <td class="text-nowrap">
+                    <a href="{% url 'editar_inmueble' inmueble.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                    <a href="{% url 'eliminar_inmueble' inmueble.pk %}" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">Aún no tienes inmuebles publicados.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
